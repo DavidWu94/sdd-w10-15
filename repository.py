@@ -109,7 +109,8 @@ def category_stats(db_path):
     try:
         rows = conn.execute("""
             SELECT c.name,
-                    COUNT(CASE WHEN i.status = '待認領' THEN 1 END),
+                   COUNT(i.id),
+                   COUNT(CASE WHEN i.status = '待認領' THEN 1 END),
                     COUNT(CASE WHEN i.status = '已認領' THEN 1 END)
                 FROM categories c
             LEFT JOIN items i ON i.category = c.name
@@ -117,5 +118,4 @@ def category_stats(db_path):
             ORDER BY c.rowid""").fetchall()
     finally:
         conn.close()
-    return [{"類別": r[0], "總件數": r[1], "待認領": r[2], "已認領": r[3]} for r
-in rows]
+    return [{"類別": r[0], "總件數": r[1], "待認領": r[2], "已認領": r[3]} for r in rows]
